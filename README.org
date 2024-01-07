@@ -1,0 +1,38 @@
+#+TITLE: Personal patched programming fonts with ligature and nerd icons
+
+* Installation
+[[https://github.com/ToxicFrog/Ligaturizer][GitHub - ToxicFrog/Ligaturizer: Programming Fonts with Ligatures added (& a s...]]
+[[https://github.com/ryanoasis/nerd-fonts][GitHub - ryanoasis/nerd-fonts: Iconic font aggregator, collection, & patcher....]]
+
+Clone the above two repositories
+#+begin_src shell
+git clone https://github.com/ryanoasis/nerd-fonts
+git clone https://github.com/ToxicFrog/Ligaturizer
+#+end_src
+
+In directory =Ligaturizer=
+#+begin_src shell
+fontforge -lang py -script ligaturize.py xxx.ttf --prefix='' --output-dir='~/.local/share/fonts/' --output-name='xxx Liga'
+#+end_src
+~--copy-character-glyphs~ sames giving no difference.
+
+In directory =nerd-fonts=
+#+begin_src shell
+./font-patcher -s -l -c -ext ttf --makegroups 6 --output ~/.local/share/fonts xxx.ttf
+#+end_src
+
+* Tips
+** Convert =.ttf= to =.otf=
+#+begin_src shell
+fontforge -lang=ff -c 'Open($1); Generate($2); Close();' xxx.ttf xxx.otf
+#+end_src
+
+* Troubleshoots
+** Failed start from nerd font
+The problem is that =UbuntuMono Nerd Fonts= in ~aur~ may have ligature removed,
+then =Ligaturized= failed to add some ligature for it, try from =UbuntuMono=
+solved, and then patch nerd fonts manually. Often =Bold, Regular, Italy= font
+need patch.
+
+* Others
+[[https://www.sainnhe.dev/post/patch-fonts-with-cursive-italic-styles/][Patch Fonts with Cursive Italic Styles - sainnhe's blog]]
