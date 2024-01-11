@@ -1,0 +1,19 @@
+{
+    "family_name": "Maple",
+    "freeze_feature_list": {
+        "ss01": "ENABLE",
+        "ss02": "ENABLE",
+        "ss03": "ENABLE",
+        "ss04": "ENABLE",
+        "ss05": "ENABLE",
+        "cv01": "IGNORE",
+        "cv02": "ENABLE",
+        "cv03": "IGNORE",
+        "cv04": "IGNORE",
+        "zero": "IGNORE"
+    },
+    "nerd_font": {
+        "mono": "ENABLE",
+        "use_hinted": "ENABLE"
+    }
+}
