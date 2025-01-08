@@ -4,21 +4,67 @@
 [[https://github.com/ToxicFrog/Ligaturizer][GitHub - ToxicFrog/Ligaturizer: Programming Fonts with Ligatures added (& a s...]]
 [[https://github.com/ryanoasis/nerd-fonts][GitHub - ryanoasis/nerd-fonts: Iconic font aggregator, collection, & patcher....]]
 
-Clone the above two repositories
 #+begin_src shell
-git clone https://github.com/ryanoasis/nerd-fonts
 git clone https://github.com/ToxicFrog/Ligaturizer
 #+end_src
+Download =font-patcher= from like
+[[https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FontPatcher.zip]]
 
-In directory =Ligaturizer=
+* Flow for =Monofoki=
+An alternative =Mononoki=
+[[https://github.com/datMaffin/monofoki][GitHub - datMaffin/monofoki: a programming typeface]]
+
+No official ligature version and nerd font.
+[[https://github.com/datMaffin/monofoki/issues/39][datMaffin/monofoki#39 Ligatures?]]
+[[https://github.com/datMaffin/monofoki/issues/38][datMaffin/monofoki#38 Nerdfont release?]]
+
+In =Ligaturizer= directory, Use =ttf-maple-beta= as ligature input font (italic ligature supported!).
+#+NAME: ligaturize
 #+begin_src shell
-fontforge -lang py -script ligaturize.py xxx.ttf --prefix='' --output-dir='~/.local/share/fonts/' --output-name='xxx Liga'
+fontforge -lang py -script ligaturize.py Monofoki-Bold-Italic.ttf --prefix="" --output-dir='fonts/output/' --output-name='Monofoli' --ligature-font-file /usr/share/fonts/ttf-maple-beta/MapleMono-BoldItalic.ttf
 #+end_src
-~--copy-character-glyphs~ sames giving no difference.
+~--copy-character-glyphs~ sames giving no difference. More option details in
+[[https://github.com/ryanoasis/nerd-fonts/wiki/ScriptOptions][ScriptOptions · ryanoasis/nerd-fonts Wiki · GitHub]]
 
-In directory =nerd-fonts=
+We call it =Monofoli= as a ligature enabled version of =Monofoki=. Note the
+generated font for =BoldItalic= style have name =Monofoki-Bold.ttf=, one need to
+change it to =Monofoki-BoldItalic.ttf= manually (right after).
+#+NAME: rename
 #+begin_src shell
-./font-patcher -s -l -c -ext ttf --makegroups 6 --output ~/.local/share/fonts xxx.ttf
+mv Monofoli-Bold{,Italic}.ttf
+#+end_src
+
+In directory =font-patcher=
+#+begin_src shell
+./font-patcher --variable-width-glyphs -q -ext ttf -out Monofoli-NF-Propo/ --makegroups=4 -c -l Monofoli/Monofoli-Bold.ttf
+./font-patcher --mono -q -ext ttf -out Monofoli-NF-Mono/ --makegroups=4 -c -l Monofoli/Monofoli-Bold.ttf
+#+end_src
+Note with ~--makegroups=4~ we have a short name of =Monofoli NFM= for output font.
+
+Now case is more complicated, the generated =BoldItalic= style font not only
+have not correct file name, but also name of font spec (see with ~fc-scan
+xxx.ttf~). After run [[rename]], we need a =fontforge= script, to change these
+specs. Remember to =mv= they (=-1.ttf=) back.
+#+begin_src python
+#!/bin/env python
+import fontforge
+
+# Open the font file
+font = fontforge.open(
+    "Monofoli-NF-Mono/MonofoliNerdFontMono-BoldItalic.ttf"
+)  # Replace with your font file path
+
+# Set the new names
+font.familyname = "Monofoli NFM"  # New family name
+font.weight = "Bold Italic"
+font.fullname = "Monofoli NFM Bold Italic"  # New full font name
+font.fontname = "MonofoliNFM-Bold Italic"  # New PostScript name
+
+# Generate the updated font file
+font.generate(
+    "Monofoli-NF-Mono/MonofoliNerdFontMono-Bold-Italic-1.ttf"
+)  # Replace with the desired output name
+font.close()
 #+end_src
 
 * Tips
